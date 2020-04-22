@@ -16,11 +16,14 @@ import (
 
 func Register(ctx *gin.Context) {
 	DB := common.GetDB()
+	//使用map获取请求参数
+	var requestUser = model.User{}
+	ctx.Bind(&requestUser)
 
 	//获取参数
-	name := ctx.PostForm("name")
-	telephone := ctx.PostForm("telephone")
-	password := ctx.PostForm("password")
+	name := requestUser.Name
+	telephone := requestUser.Telephone
+	password := requestUser.Password
 	//数据验证
 	fmt.Println(telephone, "手机号码长度", len(telephone))
 	if len(telephone) != 11 {
@@ -65,7 +68,7 @@ func Login(ctx *gin.Context) {
 	telephone := ctx.PostForm("telephone")
 	password := ctx.PostForm("password")
 
-	fmt.Println(telephone, password)
+	fmt.Println("用户手机和号码:", telephone, password)
 
 	//数据验证
 	if len(telephone) != 11 {
