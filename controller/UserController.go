@@ -59,7 +59,16 @@ func Register(ctx *gin.Context) {
 	DB.Create(&newUser)
 
 	//返回结果
-	response.Success(ctx, nil, "注册成功")
+	//发放token
+	token, err := common.ReleaseToken(newUser)
+	if err != nil {
+		response.Response(ctx, http.StatusUnprocessableEntity, 500, nil, "系统异常")
+		log.Printf("token generate error: %v", err)
+		return
+	}
+
+	//返回结果
+	response.Success(ctx, gin.H{"token": token}, "注册成功")
 }
 
 func Login(ctx *gin.Context) {
@@ -103,7 +112,7 @@ func Login(ctx *gin.Context) {
 	}
 
 	//返回结果
-	response.Success(ctx, gin.H{"token": token}, "注册成功")
+	response.Success(ctx, gin.H{"token": token}, "登录成功")
 }
 
 func Info(ctx *gin.Context) {
