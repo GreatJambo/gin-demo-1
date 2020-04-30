@@ -118,8 +118,14 @@ export default {
       console.log('正在发送请求');
       // 请求api
       userService.register(this.user).then((res) => {
+        // 保存token
         storageService.set(storageService.USER_TOKEN, res.data.data.token);
-        this.$router.replace({ name: 'Home' });
+        userService.info((response) => {
+          // 保存用户信息
+          storageService.set(storageService.USER_INFO, JSON.stringify(response.data.data.user));
+          // 跳转主页
+          this.$router.replace({ name: 'Home' });
+        });
       }).catch((err) => {
         console.log(err);
         console.log('回调失败');

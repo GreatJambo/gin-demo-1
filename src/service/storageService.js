@@ -14,7 +14,7 @@ const set = (key, data) => {
 };
 
 // 读取
-const get = (key) => localStorage.get(key);
+const get = (key) => localStorage.getItem(key);
 
 export default {
   set,
