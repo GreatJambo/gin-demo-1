@@ -21,10 +21,10 @@
             >
               <!-- Using 'button-content' slot -->
               <template v-slot:button-content>
-                <em>_{{userInfo.name}}</em>
+                <em>{{userInfo.name}}</em>
               </template>
-              <b-dropdown-item href="#">个人主页</b-dropdown-item>
-              <b-dropdown-item href="#">退出</b-dropdown-item>
+              <b-dropdown-item @click="$router.push({name:'profile'})">个人主页</b-dropdown-item>
+              <b-dropdown-item @click="logout">退出</b-dropdown-item>
             </b-nav-item-dropdown>
             <div v-if="!userInfo">
               <b-nav-item
@@ -44,14 +44,14 @@
 </template>
 
 <script>
-import storageService from '@/service/storageService';
+import { mapState, mapActions } from 'vuex';
 
 export default {
-  computed: {
-    userInfo() {
-      return JSON.parse(storageService.get(storageService.USER_INFO));
-    },
-  },
+  computed: mapState({
+    userInfo: (state) => state.userModule.userInfo,
+  }),
+
+  methods: mapActions('userModule', ['logout']),
 };
 </script>
 

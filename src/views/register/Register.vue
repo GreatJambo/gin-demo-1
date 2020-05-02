@@ -69,8 +69,7 @@
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 
 import customValidator from '@/helper/validator';
-import storageService from '@/service/storageService';
-import userService from '@/service/userService';
+import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -102,34 +101,26 @@ export default {
     },
   },
   methods: {
+    ...mapActions('userModule', { userRegister: 'register' }),
     validateState(name) {
       // 这里是es6的 析构赋值
       const { $dirty, $error } = this.$v.user[name];
       return $dirty ? !$error : null;
     },
     register() {
-      console.log('正在请求API');
       // 验证数据
       this.$v.user.$touch();
       if (this.$v.user.$anyError) {
         console.log('API拒绝请求');
         return;
       }
-      console.log('正在发送请求');
+
       // 请求api
-      userService.register(this.user).then((res) => {
-        // 保存token
-        storageService.set(storageService.USER_TOKEN, res.data.data.token);
-        userService.info((response) => {
-          // 保存用户信息
-          storageService.set(storageService.USER_INFO, JSON.stringify(response.data.data.user));
-          // 跳转主页
-          this.$router.replace({ name: 'Home' });
-        });
+      this.userRegister(this.user).then(() => {
+        // 跳转首页
+        this.$router.replace({ name: 'Home' });
       }).catch((err) => {
-        console.log(err);
-        console.log('回调失败');
-        this.$bvToast.toast(err.response.data.msg, {
+        this.$bvToast.toast(err.data.data.msg, {
           title: '数据验证错误',
           variant: 'danger',
           solid: true,
