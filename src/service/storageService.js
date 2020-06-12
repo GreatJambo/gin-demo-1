@@ -7,7 +7,6 @@ const USER_PRIFIX = `${PREFIX}user_`;
 const USER_TOKEN = `${USER_PRIFIX}token`;
 const USER_INFO = `${USER_PRIFIX}info`;
 
-
 // 储存
 const set = (key, data) => {
   localStorage.setItem(key, data);
